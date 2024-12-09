@@ -29,9 +29,9 @@ class View:
         root.config(menu=menubar)
 
         self.year_var = tk.StringVar(value=str(self.controller.model.year))
-        year_menu = ttk.Combobox(root, textvariable=self.year_var, values=[str(year) for year in range(2020, 2031)])
-        year_menu.pack(pady=10)
-        year_menu.bind("<<ComboboxSelected>>", self.controller.on_year_selected)
+        self.year_menu = ttk.Combobox(root, textvariable=self.year_var, values=[str(year) for year in range(2020, 2031)])
+        self.year_menu.pack(pady=10)
+        self.year_menu.bind("<<ComboboxSelected>>", self.controller.on_year_selected)
 
         frame = ttk.Frame(root)
         frame.pack(expand=True, fill='both')
@@ -82,7 +82,7 @@ class Controller:
         # キーボードショートカットの設定
         root.bind('<Control-s>', self.save_file_shortcut)
 
-    def new_data(self,year):
+    def new_data(self, year):
         self.is_modified = False
         self.openfile_path = ''
         self.update_title("")
@@ -97,6 +97,10 @@ class Controller:
                 self.update_and_refresh(data)
                 self.update_title(file_path)
                 self.is_modified = False
+                # インポートしたデータの年を取得してリストボックスを更新
+                imported_year = data[0][1]  # データの最初の行から年を取得
+                self.model.year = int(imported_year)
+                self.view.year_var.set(imported_year)  # リストボックスの値を更新
 
     def export_file(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
@@ -149,7 +153,6 @@ class Controller:
         self.model.year = year
         self.new_data(year)
         self.update_and_refresh(self.model.get_data())
-
 
     def on_double_click(self, event):
         item_id = self.view.tree.selection()[0]
