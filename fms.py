@@ -143,9 +143,7 @@ class Controller:
                 self.view.year_var.set(str(self.model.year))  # Reset combobox to current year
                 return
             elif response:  # Yes
-                if self.export_file():
-                    pass
-                else: 
+                if not self.export_file():
                     self.view.year_var.set(str(self.model.year))  # Reset combobox to current year
                     return
         
@@ -167,6 +165,7 @@ class Controller:
         event_var = tk.StringVar(value=current_value[4])
         event_entry = tk.Entry(popup, textvariable=event_var, width=50)
         event_entry.grid(row=0, column=1, padx=10, pady=10)
+        event_entry.focus_set()
 
         def save_event():
             new_value = (current_value[0], current_value[1], current_value[2], current_value[3], event_var.get())
