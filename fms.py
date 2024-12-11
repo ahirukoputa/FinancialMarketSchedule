@@ -23,8 +23,8 @@ class View:
     def setup_ui(self, root):
         menubar = tk.Menu(root)
         filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Import", command=self.controller.import_file)
-        filemenu.add_command(label="Export", command=self.controller.export_file)
+        filemenu.add_command(label="Open", command=self.controller.open_file)  # ラベルをOpenに変更
+        filemenu.add_command(label="Save", command=self.controller.save_file_as)  # ラベルをSaveに変更
         menubar.add_cascade(label="File", menu=filemenu)
         root.config(menu=menubar)
 
@@ -88,7 +88,7 @@ class Controller:
         self.update_title("")
         self.model.data = self.model.de.load_events(year)
 
-    def import_file(self):
+    def open_file(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
         self.openfile_path = file_path
         if file_path:
@@ -102,7 +102,7 @@ class Controller:
                 self.model.year = int(imported_year)
                 self.view.year_var.set(imported_year)  # リストボックスの値を更新
 
-    def export_file(self):
+    def save_file_as(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
         if file_path:
             self.save_file(file_path)
@@ -122,7 +122,7 @@ class Controller:
 
     def save_file_shortcut(self, event):
         if self.openfile_path == '':
-            self.export_file()
+            self.save_file_as()
         else:
             self.save_file(self.openfile_path)
 
@@ -143,7 +143,7 @@ class Controller:
                 self.view.year_var.set(str(self.model.year))  # Reset combobox to current year
                 return
             elif response:  # Yes
-                if not self.export_file():
+                if not self.save_file_as():
                     self.view.year_var.set(str(self.model.year))  # Reset combobox to current year
                     return
         
