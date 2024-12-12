@@ -43,10 +43,10 @@ class View:
         self.tree.heading("day", text="D")
         self.tree.heading("event", text="Event")
 
-        self.tree.column("weekday", width=40, stretch=tk.NO)
-        self.tree.column("year", width=40, stretch=tk.NO)
-        self.tree.column("month", width=40, stretch=tk.NO)
-        self.tree.column("day", width=40, stretch=tk.NO)
+        self.tree.column("weekday", anchor='w',width=35, stretch=tk.NO)
+        self.tree.column("year", anchor='center', width=40, stretch=tk.NO)
+        self.tree.column("month", anchor='e', width=20, stretch=tk.NO)
+        self.tree.column("day", anchor='e', width=25, stretch=tk.NO)
         self.tree.column("event", width=300, stretch=tk.YES)
 
         self.tree.tag_configure("saturday", foreground="blue")
