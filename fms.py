@@ -19,6 +19,11 @@ class View:
         self.controller = controller
         self.tree = None
         self.setup_ui(root)
+    #    self.data_num = 0
+
+    #def set_datacount(self, num):
+    #    print(num)
+    #    self.data_num = num
 
     def setup_ui(self, root):
         menubar = tk.Menu(root)
@@ -43,14 +48,19 @@ class View:
         self.tree.heading("day", text="D")
         self.tree.heading("event", text="Event")
 
-        self.tree.column("weekday", anchor='w',width=35, stretch=tk.NO)
-        self.tree.column("year", anchor='center', width=40, stretch=tk.NO)
-        self.tree.column("month", anchor='e', width=20, stretch=tk.NO)
-        self.tree.column("day", anchor='e', width=25, stretch=tk.NO)
+        self.tree.column("weekday", anchor='w',width=40, stretch=tk.NO)
+        self.tree.column("year", anchor='center', width=45, stretch=tk.NO)
+        self.tree.column("month", anchor='e', width=25, stretch=tk.NO)
+        self.tree.column("day", anchor='e', width=30, stretch=tk.NO)
         self.tree.column("event", width=300, stretch=tk.YES)
+
+        self.style = ttk.Style()
+        self.style.configure("Treeview",font=(None, 12))
 
         self.tree.tag_configure("saturday", foreground="blue")
         self.tree.tag_configure("sunday", foreground="red")
+        self.tree.tag_configure("evenrow",background="white")
+        self.tree.tag_configure("oddrow",background="#eeeeee")
 
         scrollbar = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
@@ -66,11 +76,15 @@ class View:
             self.tree.delete(row)
         for index, row in enumerate(data):
             tag = ""
+            if index % 2 == 0:
+                tag = "evenrow"
+            else:
+                tag = "oddrow"
             if row[0] == "sat":
-                tag = "saturday"
+                tag = ("saturday", tag)
             elif row[0] == "sun":
-                tag = "sunday"
-            self.tree.insert("", "end", values=row, tags=(tag,), iid=index)
+                tag = ("sunday", tag)
+            self.tree.insert("", "end", values=row, tags=tag, iid=index)
 
 class Controller:
     def __init__(self, root):
@@ -78,6 +92,8 @@ class Controller:
         self.view = View(root, self)
         self.root = root
         self.new_data(self.model.year)
+
+        #self.view.set_datacount(len(self.model.get_data()))
 
         # キーボードショートカットの設定
         root.bind('<Control-s>', self.save_file_shortcut)

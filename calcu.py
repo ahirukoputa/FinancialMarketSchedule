@@ -2,17 +2,68 @@ import calendar
 import datetime #import datetime, timedelta
 import jpholiday
 import holidays
+import os
 
 class Date_Events:
     def __init__(self):
         self.year = ''
         self.data = []
 
+    def display_data(self):
+        for d in self.data:
+            print(d)
+
     def load_events(self,year):
         self.year = year
         self.load_holidays()
         self.calendar_calc()
+        self.load_boj()
+        self.load_fomc()
+
         return self.data
+    
+    def load_boj(self):
+        filename = 'boj-' + str(self.year) + '.csv'
+        if os.path.exists(filename):
+            with open(filename, encoding='utf-8') as f:
+                data = f.readlines()
+                self.set_boj(data)
+        else:
+            pass
+
+    def load_fomc(self):
+        filename = 'fomc-' + str(self.year) + '.csv'
+        if os.path.exists(filename):
+            with open(filename, encoding='utf-8') as f:
+                data = f.readlines()
+                self.set_fomc(data)
+        else:
+            pass
+
+
+    def set_boj(self,boj_data):
+        num = len(self.data)
+        for n in range(num):
+            for bd in boj_data:
+                d = bd.split(',')
+                if int(d[1]) == int(self.data[n][2]):
+                    if int(d[2]) == int(self.data[n][3]):
+                        self.data[n][4] += d[3].replace('\n','') + '　'
+
+
+    def set_fomc(self,boj_data):
+        num = len(self.data)
+        for n in range(num):
+            for bd in boj_data:
+                d = bd.split(',')
+                if int(d[1]) == int(self.data[n][2]):
+                    if int(d[2]) == int(self.data[n][3]):
+                        self.data[n][4] += d[3].replace('\n','') + '　'
+
+
+        #self.display_data()
+
+
 
     def load_holidays(self):
         us_holidays = holidays.UnitedStates(years=self.year)
@@ -77,3 +128,7 @@ class Date_Events:
         today = datetime.date.today()
         return today.year
         
+
+de = Date_Events()
+data = de.load_events(2025)
+de.load_boj()
