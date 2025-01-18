@@ -36,56 +36,56 @@ class Model:
 class View:
     def __init__(self, root, controller):
         print("View")
+        self.root = root
         self.controller = controller
         self.tree = None
-        self.setup_ui(root)
+        self.setup_ui()
 
-    def center_window(self, window): 
+    def center_window(self): 
         print("view_center_window")
-        window.update_idletasks() 
-        width = window.winfo_screenwidth() 
-        height = window.winfo_screenheight()
+        self.root.update_idletasks() 
+        width = self.root.winfo_screenwidth() 
+        height = self.root.winfo_screenheight()
         return width, height
 
-    def setup_ui(self, root):
+    def setup_ui(self):
         print("view_setup_ui")
-        #self.init_window(root)
-        self.create_menu(root)
-        self.create_combobox(root)
-        frame = self.create_treeview_frame(root)
+        self.create_menu()
+        self.create_combobox()
+        frame = self.create_treeview_frame()
         self.setup_treeview(frame)
         self.apply_styles()
         self.create_scrollbars(frame)
         self.tree.bind("<Double-1>", self.controller.on_double_click)
-        self.init_window(root)
+        self.init_window()
         self.update_treeview(self.controller.model.get_data())
 
-    def init_window(self, root):
+    def init_window(self):
         print("view_init_window")
-        windows_width, window_height = self.center_window(root)
+        windows_width, window_height = self.center_window()
         offset_width = (windows_width // 2) - (config.form_width // 2)
         offset_height = (window_height // 2) - (config.form_height // 2)
         root.geometry(f'{config.form_width}x{config.form_height}+{offset_width}+{offset_height}')
 
-    def create_menu(self, root):
+    def create_menu(self):
         print("view_create_menu")
-        menubar = tk.Menu(root)
+        menubar = tk.Menu(self.root)
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.controller.open_file)
         filemenu.add_command(label="Save", command=self.controller.save_file_as)
         menubar.add_cascade(label="File", menu=filemenu)
         root.config(menu=menubar)
 
-    def create_combobox(self, root):
+    def create_combobox(self):
         print("view_create_combobox")
         self.year_var = tk.StringVar(value=str(config.current_year))
-        self.year_menu = ttk.Combobox(root, textvariable=self.year_var, values=[str(year) for year in range(2020, 2031)])
+        self.year_menu = ttk.Combobox(self.root, textvariable=self.year_var, values=[str(year) for year in range(2020, 2031)])
         self.year_menu.pack(pady=10)
         self.year_menu.bind("<<ComboboxSelected>>", self.controller.on_year_selected)
 
-    def create_treeview_frame(self, root):
+    def create_treeview_frame(self):
         print("view_create_treeview_frame")
-        frame = ttk.Frame(root, width=config.form_width, height=400, padding=10)
+        frame = ttk.Frame(self.root, width=config.form_width, height=400, padding=10)
         frame.pack(expand=True, fill='both')
         return frame
 
@@ -140,7 +140,6 @@ class Controller:
         self.view = View(root, self)
         self.root = root
         self.new_data()
-
         # キーボードショートカットの設定
         root.bind('<Control-s>', self.save_file_shortcut)
 
