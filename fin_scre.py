@@ -57,8 +57,8 @@ class FinanceData:
             self.data = self.scr.load_from_csv(self.data_filename)
             print(f"Data loaded from {self.data_filename}")
         else:
-            self.data = self.initialize_dates(config.current_year)
-            self.save_initialize_data(config.current_year)
+            self.data = self.initialize_dates()
+            self.save_initialize_data()
             print(f"Data saved to {self.data_filename}")
 
     def initialize_dates(self):
