@@ -11,7 +11,7 @@ This project provides a GUI application for viewing and managing calendar events
 1. Ensure Python is installed. If not, download and install it from [Python official site](https://www.python.org/).
 2. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/yourrepository.git
+    git clone https://github.com/ahirukoputa/FinancialMarketSchedule.git
     ```
 3. Navigate to the directory:
     ```bash
