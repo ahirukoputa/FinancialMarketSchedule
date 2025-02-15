@@ -1,11 +1,14 @@
+import calendar
+import csv
+import datetime
+import os
+
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import csv
-import calendar
-import datetime
-import pandas as pd
-import os
-import config #初期設定
+
+import config  # 初期設定
+
 
 class Scraper:
     def __init__(self):
@@ -119,7 +122,7 @@ class FinanceData:
         for i, test_data in enumerate(test_datas): 
             for index, row in self.data.iterrows():
                 if row['year'] == test_data[0] and row['month'] == test_data[1] and row['day'] == test_data[2]:
-                    self.data.at[index, self.data.columns[4 + i]] = test_data[3]
+                    self.data.at[index, self.data.columns[4 + i]] = float(test_data[3])
                     break
                 
         self.scr.save_to_csv(self.data_filename, self.data.values)
